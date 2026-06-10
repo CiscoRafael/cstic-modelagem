@@ -1,0 +1,51 @@
+@startuml
+!theme plain
+skinparam defaultFontName Arial
+skinparam maxMessageSize 150
+
+title Diagrama de Sequência - Abertura de Chamado
+
+actor "Funcionário" as Funcionario
+boundary "Web App" as Web
+control "API Gateway" as Gateway
+participant "Ticket Service" as Ticket
+database "Ticket DB" as DB
+queue "RabbitMQ" as MQ
+participant "Notification Service" as Notify
+boundary "Serviço de E-mail" as Email
+
+autonumber
+Funcionario -> Web : Preencher e enviar formulário
+activate Web
+
+Web -> Gateway : POST /api/chamados
+activate Gateway
+
+Gateway -> Ticket : Encaminha requisição
+activate Ticket
+
+Ticket -> DB : Persistir dados do chamado
+activate DB
+DB --> Ticket : Confirmação (ID gerado)
+deactivate DB
+
+Ticket -->> MQ : Publicar evento (TicketCreated)
+Ticket --> Gateway : Retorna 201 Created
+deactivate Ticket
+
+Gateway --> Web : Retorna 201 Created
+deactivate Gateway
+
+Web --> Funcionario : Exibe sucesso na tela
+deactivate Web
+
+== Processamento Assíncrono ==
+MQ -->> Notify : Consome evento (TicketCreated)
+activate Notify
+Notify -> Email : Dispara e-mail de confirmação
+activate Email
+Email -->> Funcionario : Entrega notificação de abertura
+deactivate Email
+deactivate Notify
+
+@enduml

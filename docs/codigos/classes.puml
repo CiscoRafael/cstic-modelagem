@@ -1,0 +1,161 @@
+@startuml
+!theme plain
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam defaultFontName Arial
+skinparam shadowing true
+
+' Paleta de cores para os contextos
+skinparam package {
+    BackgroundColor White
+    BorderColor DarkSlateGray
+}
+skinparam class {
+    BackgroundColor #F9F9F9
+    BorderColor #1565C0
+    ArrowColor #1565C0
+}
+skinparam enum {
+    BackgroundColor #FFF3E0
+    BorderColor #E65100
+}
+
+title Diagrama de Classes de Domínio - CSTIC
+
+package "Enums" {
+    enum Perfil {
+        FUNCIONARIO
+        TECNICO
+        ADMINISTRADOR
+    }
+
+    enum Prioridade {
+        BAIXA
+        MEDIA
+        ALTA
+        CRITICA
+    }
+
+    enum StatusChamado {
+        ABERTO
+        EM_ANALISE
+        EM_ATENDIMENTO
+        SOLUCIONADO
+        FINALIZADO
+        FINALIZADO_AUTOMATICAMENTE
+        CANCELADO
+    }
+}
+
+
+package "User Context" {
+    class Departamento {
+        + id: Long
+        + nome: String
+    }
+
+    class Usuario {
+        + id: Long
+        + nome: String
+        + email: String
+        + senha: String
+        + perfil: Perfil
+        --
+        + autenticar(): Boolean
+        + alterarSenha(novaSenha: String)
+    }
+    
+    Departamento "1" -right- "*" Usuario : aloca >
+}
+
+package "Core Domain" {
+    
+    class Categoria {
+        + id: Long
+        + nome: String
+        + descricao: String
+    }
+
+    class Chamado <<Aggregate Root>> {
+        + id: Long
+        + titulo: String
+        + descricao: String
+        + prioridade: Prioridade
+        + status: StatusChamado
+        + dataAbertura: DateTime
+        + dataSolucao: DateTime
+        + dataFinalizacao: DateTime
+        + finalizacaoAutomatica: Boolean
+        --
+        + atribuirTecnico(tecnico: Usuario)
+        + atualizarStatus(novoStatus: StatusChamado)
+        + adicionarComentario(comentario: Comentario)
+        + assinarEFinalizar(assinatura: AssinaturaDigital)
+    }
+
+    class Atendimento {
+        + id: Long
+        + diagnostico: String
+        + solucao: String
+        + dataInicio: DateTime
+        + dataConclusao: DateTime
+    }
+
+    class Comentario {
+        + id: Long
+        + mensagem: String
+        + dataHora: DateTime
+    }
+
+    class Anexo {
+        + id: Long
+        + nomeArquivo: String
+        + tipoArquivo: String
+        + url: String
+    }
+
+    class AssinaturaDigital {
+        + id: Long
+        + tipo: String
+        + hashAssinatura: String
+        + dataAssinatura: DateTime
+    }
+    
+    Categoria "1" -- "*" Chamado : categoriza >
+    
+    Chamado *-- "0..1" Atendimento : possui >
+    Chamado *-- "*" Comentario : contém >
+    Chamado *-- "*" Anexo : anexa >
+    Chamado o-- "0..1" AssinaturaDigital : validado por >
+}
+
+package "Communication Context" {
+    class MensagemChat {
+        + id: Long
+        + conteudo: String
+        + dataEnvio: DateTime
+    }
+
+    class Notificacao {
+        + id: Long
+        + mensagem: String
+        + tipo: String
+        + enviadaEm: DateTime
+        + lida: Boolean
+        --
+        + marcarComoLida()
+    }
+    
+    Chamado *-- "*" MensagemChat : histórico >
+}
+
+Usuario "1" --> "*" Chamado : solicita >
+Usuario "0..1" --> "*" Chamado : atende (Técnico) >
+
+Usuario "1" --> "*" Comentario : autor >
+Usuario "1" --> "*" MensagemChat : envia >
+Usuario "1" --> "*" Notificacao : recebe >
+Usuario "1" --> "*" AssinaturaDigital : assina >
+
+@enduml

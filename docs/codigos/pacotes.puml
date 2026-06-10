@@ -1,0 +1,83 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+title Diagrama de Pacotes - Sistema de Gestão de Chamados de TI
+
+package "Apresentação" {
+    package "Web" {
+        class "Dashboard"
+        class "Tela de Chamados"
+        class "Tela de Login"
+        class "Tela de Chat"
+        class "Tela de Relatórios"
+    }
+}
+
+package "Autenticação" {
+    class "Usuário"
+    class "Perfil"
+    class "Controle de Acesso"
+}
+
+package "Gestão de Chamados" {
+    class "Chamado"
+    class "Categoria"
+    class "Atendimento"
+    class "Anexo"
+}
+
+package "Comunicação" {
+    class "MensagemChat"
+    class "Comentário"
+    class "Notificação"
+}
+
+package "Validação" {
+    class "Assinatura Digital"
+}
+
+package "Administração" {
+    class "Departamento"
+    class "Relatórios"
+    class "Dashboard"
+}
+
+package "Persistência" {
+    database "PostgreSQL"
+    folder "Armazenamento de Arquivos"
+}
+
+package "Integrações" {
+    queue "RabbitMQ"
+    cloud "Serviço de E-mail"
+}
+
+package "Processos Automáticos" {
+    class "Scheduler"
+}
+
+' Dependências
+"Apresentação" ..> "Autenticação"
+"Apresentação" ..> "Gestão de Chamados"
+"Apresentação" ..> "Comunicação"
+"Apresentação" ..> "Administração"
+
+"Gestão de Chamados" ..> "Autenticação"
+"Gestão de Chamados" ..> "Validação"
+"Gestão de Chamados" ..> "Comunicação"
+"Gestão de Chamados" ..> "Persistência"
+
+"Comunicação" ..> "Persistência"
+"Comunicação" ..> "Integrações"
+
+"Administração" ..> "Persistência"
+
+"Validação" ..> "Persistência"
+
+"Processos Automáticos" ..> "Gestão de Chamados"
+"Processos Automáticos" ..> "Persistência"
+
+"Integrações" ..> "Persistência"
+
+@enduml

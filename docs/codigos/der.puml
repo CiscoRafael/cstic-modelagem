@@ -1,0 +1,124 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+title DER - Sistema de Gestão de Chamados de TI
+
+entity DEPARTAMENTO {
+    * id : BIGINT <<PK>>
+    --
+    nome : VARCHAR
+}
+
+entity USUARIO {
+    * id : BIGINT <<PK>>
+    --
+    departamento_id : BIGINT <<FK>>
+    nome : VARCHAR
+    email : VARCHAR
+    senha : VARCHAR
+    perfil : VARCHAR
+}
+
+entity CATEGORIA {
+    * id : BIGINT <<PK>>
+    --
+    nome : VARCHAR
+    descricao : VARCHAR
+}
+
+entity CHAMADO {
+    * id : BIGINT <<PK>>
+    --
+    usuario_id : BIGINT <<FK>>
+    categoria_id : BIGINT <<FK>>
+    titulo : VARCHAR
+    descricao : TEXT
+    prioridade : VARCHAR
+    status : VARCHAR
+    data_abertura : TIMESTAMP
+    data_solucao : TIMESTAMP
+    data_finalizacao : TIMESTAMP
+    finalizacao_automatica : BOOLEAN
+}
+
+entity ATENDIMENTO {
+    * id : BIGINT <<PK>>
+    --
+    chamado_id : BIGINT <<FK>>
+    tecnico_id : BIGINT <<FK>>
+    diagnostico : TEXT
+    solucao : TEXT
+    data_inicio : TIMESTAMP
+    data_conclusao : TIMESTAMP
+}
+
+entity COMENTARIO {
+    * id : BIGINT <<PK>>
+    --
+    chamado_id : BIGINT <<FK>>
+    usuario_id : BIGINT <<FK>>
+    mensagem : TEXT
+    data_hora : TIMESTAMP
+}
+
+entity MENSAGEM_CHAT {
+    * id : BIGINT <<PK>>
+    --
+    chamado_id : BIGINT <<FK>>
+    remetente_id : BIGINT <<FK>>
+    conteudo : TEXT
+    data_envio : TIMESTAMP
+}
+
+entity ANEXO {
+    * id : BIGINT <<PK>>
+    --
+    chamado_id : BIGINT <<FK>>
+    nome_arquivo : VARCHAR
+    tipo_arquivo : VARCHAR
+    url : VARCHAR
+}
+
+entity ASSINATURA_DIGITAL {
+    * id : BIGINT <<PK>>
+    --
+    chamado_id : BIGINT <<FK>>
+    usuario_id : BIGINT <<FK>>
+    tipo : VARCHAR
+    hash_assinatura : VARCHAR
+    data_assinatura : TIMESTAMP
+}
+
+entity NOTIFICACAO {
+    * id : BIGINT <<PK>>
+    --
+    usuario_id : BIGINT <<FK>>
+    mensagem : VARCHAR
+    tipo : VARCHAR
+    enviada_em : TIMESTAMP
+    lida : BOOLEAN
+}
+
+DEPARTAMENTO ||--o{ USUARIO
+
+USUARIO ||--o{ CHAMADO : abre
+CATEGORIA ||--o{ CHAMADO : classifica
+
+CHAMADO ||--|| ATENDIMENTO : possui
+USUARIO ||--o{ ATENDIMENTO : realiza
+
+CHAMADO ||--o{ COMENTARIO
+USUARIO ||--o{ COMENTARIO : escreve
+
+CHAMADO ||--o{ MENSAGEM_CHAT
+USUARIO ||--o{ MENSAGEM_CHAT : envia
+
+CHAMADO ||--o{ ANEXO
+
+CHAMADO ||--o| ASSINATURA_DIGITAL : validacao
+USUARIO ||--o{ ASSINATURA_DIGITAL : confirma
+
+USUARIO ||--o{ NOTIFICACAO : recebe
+
+@enduml

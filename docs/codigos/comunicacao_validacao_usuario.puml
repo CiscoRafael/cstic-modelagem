@@ -1,0 +1,67 @@
+@startuml
+!theme plain
+skinparam defaultFontName Arial
+
+title Diagrama de Sequência - Solução e Validação
+
+actor "Técnico" as Tecnico
+boundary "Web App" as Web
+control "API Gateway" as Gateway
+participant "Ticket Service" as Ticket
+database "Ticket DB" as DB
+queue "RabbitMQ" as MQ
+participant "Notification Service" as Notify
+boundary "Serviço de E-mail" as Email
+actor "Funcionário" as Usuario
+
+autonumber
+== Fase 1: Técnico Registra Solução ==
+Tecnico -> Web : Registrar solução do chamado
+activate Web
+Web -> Gateway : PUT /api/chamados/{id}/solucionar
+activate Gateway
+Gateway -> Ticket : Atualiza chamado
+activate Ticket
+
+Ticket -> DB : Atualizar diagnóstico, solução e status (SOLUCIONADO)
+activate DB
+DB --> Ticket : Confirmação
+deactivate DB
+
+Ticket -->> MQ : Publicar evento (TicketSolved)
+Ticket --> Gateway : Retorna 200 OK
+deactivate Ticket
+Gateway --> Web : Retorna 200 OK
+deactivate Gateway
+Web --> Tecnico : Confirmação na tela
+deactivate Web
+
+MQ -->> Notify : Consome evento (TicketSolved)
+activate Notify
+Notify -> Email : Dispara link de validação
+activate Email
+Email -->> Usuario : Notifica necessidade de validação
+deactivate Email
+deactivate Notify
+
+== Fase 2: Funcionário Valida com Assinatura Digital ==
+autonumber 1
+Usuario -> Web : Aprova solução (Assinatura Digital)
+activate Web
+Web -> Gateway : POST /api/chamados/{id}/validar
+activate Gateway
+Gateway -> Ticket : Valida assinatura e encerra
+activate Ticket
+
+Ticket -> DB : Salvar hash da assinatura e status (FINALIZADO)
+activate DB
+DB --> Ticket : Confirmação
+deactivate DB
+
+Ticket --> Gateway : Retorna 200 OK
+deactivate Ticket
+Gateway --> Web : Retorna 200 OK
+deactivate Gateway
+Web --> Usuario : Exibe sucesso do encerramento
+deactivate Web
+@enduml

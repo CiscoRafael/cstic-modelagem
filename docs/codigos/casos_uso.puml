@@ -1,0 +1,115 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+
+' Paleta de cores para os Casos de Uso
+skinparam usecase {
+    BackgroundColor #F9F9F9
+    BorderColor #1565C0
+    ArrowColor #1565C0
+}
+
+title Diagrama de Casos de Uso - CSTIC
+
+' Definição de Atores e Herança
+actor "Usuário Base" as Base
+
+actor "Funcionário" as Funcionario
+actor "Técnico" as Tecnico
+actor "Administrador" as Admin
+actor "Scheduler\n<<Sistema>>" as Scheduler
+
+' Herança: Funcionário, Técnico e Admin herdam as ações do Usuário Base
+Funcionario -up-|> Base
+Tecnico -up-|> Base
+Admin -up-|> Base
+
+rectangle "Sistema de Gestão de Chamados de TI" {
+
+    package "Acesso e Conta" {
+        usecase "Realizar Login" as UC1
+        usecase "Recuperar Senha" as UC2
+    }
+
+    package "Interação e Consulta Geral" {
+        usecase "Consultar Chamados" as UC4
+        usecase "Filtrar Chamados" as UC5
+        usecase "Adicionar Comentários" as UC6
+        usecase "Enviar Mensagens\n(Chat)" as UC7
+        usecase "Anexar Arquivos" as UC8
+        usecase "Receber Notificações" as UC17
+    }
+
+    package "Abertura e Validação" {
+        usecase "Abrir Chamado" as UC3
+        usecase "Validar Solução\n(Assinatura Digital)" as UC14
+        usecase "Finalizar Chamado" as UC15
+    }
+
+    package "Atendimento Técnico" {
+        usecase "Assumir Chamado" as UC9
+        usecase "Atualizar Status" as UC10
+        usecase "Registrar Diagnóstico" as UC11
+        usecase "Registrar Solução" as UC12
+        usecase "Marcar como\nSolucionado" as UC13
+    }
+    
+    package "Automação" {
+        usecase "Encerrar Chamado\nAutomaticamente" as UC16
+    }
+
+    package "Administração" {
+        usecase "Gerenciar Usuários" as UC18
+        usecase "Gerenciar Categorias" as UC19
+        usecase "Visualizar Dashboard" as UC20
+        usecase "Emitir Relatórios" as UC21
+    }
+}
+
+' --- Relacionamentos de Atores ---
+
+' Ações comuns a todos (Usuário Base)
+Base --> UC1
+Base --> UC2
+Base --> UC4
+Base --> UC6
+Base --> UC7
+Base --> UC17
+
+' Ações exclusivas do Funcionário
+Funcionario --> UC3
+Funcionario --> UC14
+
+' Ações exclusivas do Técnico
+Tecnico --> UC9
+Tecnico --> UC10
+Tecnico --> UC13
+
+' Ações exclusivas do Administrador
+Admin --> UC18
+Admin --> UC19
+Admin --> UC20
+Admin --> UC21
+
+' Ações do Sistema (Automáticas)
+Scheduler --> UC16
+
+' --- Regras de Inclusão e Extensão (Includes / Extends) ---
+
+' Extensões (Opcionais)
+UC4 <.. UC5 : <<extend>>
+UC3 <.. UC8 : <<extend>>
+UC6 <.. UC8 : <<extend>>
+
+' Inclusões (Obrigatórias)
+UC13 ..> UC11 : <<include>>
+UC13 ..> UC12 : <<include>>
+
+' Ambas as ações culminam em "Finalizar Chamado"
+UC14 ..> UC15 : <<include>>
+UC16 ..> UC15 : <<include>>
+
+@enduml

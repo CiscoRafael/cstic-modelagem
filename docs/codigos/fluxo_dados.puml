@@ -1,0 +1,82 @@
+@startuml
+!theme plain
+left to right direction
+skinparam linetype polyline
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+' Cores para diferenciar os elementos do DFD
+skinparam usecase {
+    BackgroundColor #E3F2FD
+    BorderColor #1565C0
+}
+skinparam database {
+    BackgroundColor #E8F5E9
+    BorderColor #2E7D32
+}
+skinparam actor {
+    BackgroundColor White
+    BorderColor DarkSlateGray
+}
+
+title DFD Nível 1 - Sistema de Gestão de Chamados de TI (CSTIC)
+
+actor "Funcionário" as Usuario
+actor "Técnico" as Tecnico
+actor "Administrador" as Admin
+
+' Processos (Sempre com verbos)
+usecase "1.0\nAutenticar\nUsuário" as Auth
+usecase "2.0\nGerenciar\nChamados" as Ticket
+usecase "3.0\nProcessar\nMensagens (Chat)" as Chat
+usecase "4.0\nGerenciar\nNotificações" as Notify
+usecase "5.0\nGerar\nRelatórios" as Report
+usecase "6.0\nValidar\nAssinatura Digital" as Validation
+usecase "7.0\nExecutar Encerramento\nAutomático" as Scheduler
+
+' Depósitos de Dados (Data Stores)
+database "D1\nCadastro de Usuários" as D1
+database "D2\nBase de Chamados" as D2
+database "D3\nHistórico de Mensagens" as D3
+database "D4\nRegistro de Notificações" as D4
+database "D5\nRegistro de Assinaturas" as D5
+
+' Fluxos de Autenticação
+Usuario --> Auth : Credenciais
+Tecnico --> Auth : Credenciais
+Admin --> Auth : Credenciais
+Auth <--> D1 : Validar / Recuperar dados
+
+' Fluxos de Chamados
+Usuario --> Ticket : Dados do chamado\n(Abertura/Atualização)
+Tecnico --> Ticket : Registro de atendimento
+Admin --> Ticket : Parâmetros de consulta
+Ticket <--> D2 : Gravar / Recuperar chamado
+
+' Fluxos de Chat
+Usuario --> Chat : Mensagem de texto
+Tecnico --> Chat : Mensagem de texto
+Chat <--> D3 : Gravar / Recuperar histórico
+
+' Fluxos de Notificações (Event-Driven no background)
+Ticket --> Notify : Evento de atualização
+Notify --> D4 : Gravar log de envio
+Notify --> Usuario : Alerta de sistema/E-mail
+Notify --> Tecnico : Alerta de sistema
+
+' Fluxos de Relatórios
+Admin --> Report : Critérios de filtro
+Report --> D2 : Extrair dados agregados
+Report --> Admin : Dashboard / Exportação
+
+' Fluxos de Validação e Assinatura
+Usuario --> Validation : Chave/Token de assinatura
+Validation --> D5 : Gravar certificado/assinatura
+Validation --> Ticket : Trigger de finalização
+
+' Fluxos de Encerramento Automático
+Scheduler --> D2 : Consultar chamados\n(Solucionado > 7 dias)
+Scheduler --> Ticket : Comando de encerramento
+Ticket --> D2 : Atualizar status (Finalizado)
+
+@enduml

@@ -1,0 +1,52 @@
+@startuml
+!theme plain
+skinparam defaultFontName Arial
+
+title Diagrama de Sequência - Encerramento Automático
+
+participant "CRON Job\n(Timer)" as Cron
+participant "Scheduler Service" as Job
+control "API Gateway" as Gateway
+participant "Ticket Service" as Ticket
+database "Ticket DB" as DB
+queue "RabbitMQ" as MQ
+participant "Notification Service" as Notify
+boundary "Serviço de E-mail" as Email
+
+autonumber
+Cron -> Job : Trigger de execução diária
+activate Job
+
+Job -> Gateway : POST /api/chamados/fechamento-lote
+activate Gateway
+Gateway -> Ticket : Executa rotina
+activate Ticket
+
+Ticket -> DB : SELECT chamados (Status=SOLUCIONADO && Dias > 7)
+activate DB
+DB --> Ticket : Retorna lista de IDs
+deactivate DB
+
+loop Para cada Chamado
+    Ticket -> DB : UPDATE status = FINALIZADO_AUTOMATICAMENTE
+    activate DB
+    DB --> Ticket : OK
+    deactivate DB
+    Ticket -->> MQ : Publicar evento (TicketAutoClosed)
+end
+
+Ticket --> Gateway : Retorna 200 OK (Processado)
+deactivate Ticket
+Gateway --> Job : Retorna 200 OK
+deactivate Gateway
+deactivate Job
+
+== Envio de Notificações em Background ==
+MQ -->> Notify : Consome eventos em lote
+activate Notify
+Notify -> Email : Dispara informes de encerramento
+activate Email
+Email -->> "Usuários" : Notifica fechamento por inatividade
+deactivate Email
+deactivate Notify
+@enduml

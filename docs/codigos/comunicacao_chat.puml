@@ -1,0 +1,63 @@
+@startuml
+!theme plain
+skinparam defaultFontName Arial
+
+title Diagrama de Sequência - Chat em Tempo Real
+
+actor "Funcionário" as Usuario
+boundary "Web App (React)" as Web
+control "API Gateway (WSS)" as Gateway
+participant "Chat Service" as Chat
+database "Chat DB" as DB
+boundary "Web App (React)" as WebTec
+actor "Técnico" as Tecnico
+
+autonumber
+== Estabelecimento da Conexão WebSocket ==
+Usuario -> Web : Abre o chat
+Web -> Gateway : Conexão WebSocket Upgrade (WSS)
+Gateway -> Chat : Estabelece túnel WS
+WebTec -> Gateway : Conexão WebSocket Upgrade (WSS)
+Gateway -> Chat : Estabelece túnel WS
+
+== Troca de Mensagens Bidirecional ==
+autonumber 1
+Usuario -> Web : Digita e envia mensagem
+activate Web
+Web -->> Gateway : Payload (Mensagem via WS)
+Gateway -->> Chat : Encaminha payload
+activate Chat
+
+Chat -> DB : Salvar histórico da mensagem
+activate DB
+DB --> Chat : OK
+deactivate DB
+
+Chat -->> Gateway : Broadcast payload p/ Técnico logado na sala
+deactivate Chat
+Gateway -->> WebTec : Recebe mensagem em tempo real
+activate WebTec
+WebTec --> Tecnico : Renderiza mensagem na tela
+deactivate WebTec
+deactivate Web
+
+autonumber 10
+Tecnico -> WebTec : Digita e responde
+activate WebTec
+WebTec -->> Gateway : Payload (Resposta via WS)
+Gateway -->> Chat : Encaminha payload
+activate Chat
+
+Chat -> DB : Salvar histórico da resposta
+activate DB
+DB --> Chat : OK
+deactivate DB
+
+Chat -->> Gateway : Broadcast payload p/ Funcionário
+deactivate Chat
+Gateway -->> Web : Recebe resposta em tempo real
+activate Web
+Web --> Usuario : Renderiza resposta na tela
+deactivate Web
+deactivate WebTec
+@enduml

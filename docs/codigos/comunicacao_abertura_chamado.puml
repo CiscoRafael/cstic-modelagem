@@ -1,0 +1,26 @@
+@startuml
+allowmixing
+skinparam defaultFontName Arial
+skinparam linetype polyline
+
+title Diagrama de Comunicação - Abertura de Chamado
+
+actor "Funcionário" as Funcionario
+boundary "Web App" as Web
+control "API Gateway" as Gateway
+participant "Ticket Service" as Ticket
+database "Ticket DB" as DB
+queue "RabbitMQ" as MQ
+participant "Notification Service" as Notify
+boundary "E-mail" as Email
+
+Funcionario -right-> Web : 1: enviarFormulario()
+Web -right-> Gateway : 1.1: POST /chamados
+Gateway -down-> Ticket : 1.2: criarChamado()
+Ticket -left-> DB : 1.3: persistirDados()
+Ticket -right-> MQ : 1.4: publicarEvento(TicketCreated)
+MQ -down-> Notify : 2: consumirEvento(TicketCreated)
+Notify -left-> Email : 2.1: dispararConfirmacao()
+Email -up-> Funcionario : 2.2: notificarAbertura()
+
+@enduml

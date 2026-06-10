@@ -1,0 +1,139 @@
+@startuml
+!theme plain
+skinparam componentStyle rectangle
+skinparam shadowing true
+skinparam linetype ortho
+skinparam defaultFontName Arial
+
+' Paleta de cores para facilitar a leitura
+skinparam node {
+    BackgroundColor White
+    BorderColor DarkSlateGray
+}
+skinparam component {
+    BackgroundColor #E3F2FD
+    BorderColor #1565C0
+    ArrowColor #1565C0
+}
+skinparam database {
+    BackgroundColor #E8F5E9
+    BorderColor #2E7D32
+}
+skinparam queue {
+    BackgroundColor #FFF3E0
+    BorderColor #E65100
+}
+
+title Diagrama de Arquitetura de Microsserviços - CSTIC
+
+actor "Funcionário" as Funcionario
+actor "Técnico" as Tecnico
+actor "Administrador" as Admin
+
+package "Frontend Layer" {
+    component "🌐 Web App\n(React / SPA)" as Web
+}
+
+component "🔐 API Gateway\n(Roteamento, Rate Limit, TLS)" as Gateway
+
+package "Microsserviços (Domínios)" {
+
+    package "Identity Domain" {
+        component "Auth Service\n(Autenticação / JWT)" as Auth
+        database "Auth DB" as AuthDB
+        Auth -[hidden]down- AuthDB
+        Auth --> AuthDB
+    }
+
+    package "User Domain" {
+        component "User Service\n(Usuários e Deptos)" as User
+        database "User DB" as UserDB
+        User -[hidden]down- UserDB
+        User --> UserDB
+    }
+
+    package "Ticket Domain" {
+        component "Ticket Service\n(Gestão de Chamados)" as Ticket
+        database "Ticket DB" as TicketDB
+        collections "Armazenamento\n(S3 / MinIO)" as Files
+        Ticket -[hidden]down- TicketDB
+        Ticket --> TicketDB
+        Ticket --> Files : Anexos
+    }
+
+    package "Communication Domain" {
+        component "Chat Service\n(Mensageria em Tempo Real)" as Chat
+        database "Chat DB\n(NoSQL / Redis/Mongo)" as ChatDB
+        Chat -[hidden]down- ChatDB
+        Chat --> ChatDB
+        
+        component "Notification Service\n(Alertas e Avisos)" as Notify
+    }
+
+    package "Analytics Domain" {
+        component "Report Service\n(Dashboard e Métricas)" as Report
+        database "Report DB\n(Data Warehouse/Read-Replica)" as ReportDB
+        Report -[hidden]down- ReportDB
+        Report --> ReportDB
+    }
+    
+    package "Background Jobs" {
+        component "Scheduler Service\n(Cron Jobs)" as Scheduler
+    }
+}
+
+queue "Mensageria Central\n(RabbitMQ / Kafka)" as MQ
+
+cloud "Provedor de E-mail\n(SMTP)" as Email
+
+' Interações de Usuário
+Funcionario --> Web
+Tecnico --> Web
+Admin --> Web
+
+' Gateway e Frontend
+Web --> Gateway : REST / HTTPS
+Web .right.> Gateway : WebSockets (Chat)
+
+' Roteamento do Gateway
+Gateway --> Auth
+Gateway --> Ticket
+Gateway --> User
+Gateway --> Chat : WS / WSS
+Gateway --> Report
+
+' Comunicação Síncrona (REST/gRPC)
+Ticket ..> User : [REST] Consulta usuário
+Gateway ..> Auth : [REST] Valida Token
+
+' Comunicação Assíncrona (Event-Driven)
+Ticket ==down==> MQ : [Event] Chamado Atualizado
+Chat ==down==> MQ : [Event] Nova Mensagem
+Scheduler ==down==> MQ : [Event] Trigger Encerramento
+User ==down==> MQ : [Event] Usuário Criado/Alterado
+
+' Consumidores de Eventos
+MQ ==up==> Notify : Consome eventos
+MQ ==up==> Report : Sincroniza dados (CQRS)
+MQ ==up==> Ticket : Consome trigger de encerramento
+
+' Notificações
+Notify --> Email : Dispara e-mail
+Notify --> Web : Push Notifications (Web Push)
+
+note right of Ticket
+  **Ciclo de Vida do Chamado:**
+  1. ABERTO
+  2. EM ANÁLISE
+  3. EM ATENDIMENTO
+  4. SOLUCIONADO
+  5. Assinatura Digital -> FINALIZADO
+  
+  *Auto-encerramento:*
+  O Scheduler não lê o banco diretamente.
+  Ele emite um evento de "Verificação de Prazo".
+  O Ticket Service consome, avalia os chamados
+  solucionados há 7 dias, e os finaliza.
+end note
+
+@enduml

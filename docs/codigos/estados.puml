@@ -1,0 +1,53 @@
+@startuml
+!theme plain
+skinparam state {
+    BackgroundColor #E3F2FD
+    BorderColor #1565C0
+    FontColor #000
+    ArrowColor #1565C0
+}
+
+title Diagrama de Estados - Ciclo de Vida do Chamado (CSTIC)
+
+[*] --> ABERTO : Abertura (Usuário)
+
+state "Processo de Atendimento" {
+    
+    state "EM_ANALISE" as Analise
+    state "EM_ATENDIMENTO" as Atendimento
+    state "SOLUCIONADO" as Solucionado
+
+    Analise --> Atendimento : Atribuir Técnico
+    
+    Atendimento --> Solucionado : Registrar Solução
+    
+    ' Melhoria Crítica: Fluxo de Reabertura
+    Solucionado --> Atendimento : Rejeitar Solução (Usuário)
+}
+
+' Fluxos de Finalização
+Solucionado --> FINALIZADO : Validação (Assinatura)
+Solucionado --> FINALIZADO_AUTOMATICAMENTE : Timeout (Scheduler)
+
+' Fluxos de Cancelamento (Podem ocorrer a qualquer momento antes de finalizado)
+ABERTO --> CANCELADO : Cancelar
+Analise --> CANCELADO : Cancelar
+Atendimento --> CANCELADO : Cancelar
+
+' Estados Finais
+FINALIZADO --> [*]
+FINALIZADO_AUTOMATICAMENTE --> [*]
+CANCELADO --> [*]
+
+' Notas explicativas melhoradas
+note bottom of Solucionado
+  O chamado entra em estado de
+  "aguardando confirmação".
+end note
+
+note right of Atendimento
+  Aqui ocorrem as interações
+  (chat, comentários, anexos).
+end note
+
+@enduml
