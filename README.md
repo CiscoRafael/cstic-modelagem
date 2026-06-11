@@ -9,10 +9,6 @@
 
 # 🌐 Cstic 
 
-> [!NOTE]
->
-> Crie uma **logo** para o projeto que represente a aplicação em questão.
-
 <table>
   <tr>
     <td width="800px">
@@ -56,7 +52,6 @@
 
 ## 🔗 Links Úteis
 * 🌐 📄 Documentação Completa (PDF): [Acessar Documentação do Projeto](<docs/Documentação de Projeto - CSTIC.pdf>)
-* 
 --
 
 ## 📝 Sobre o Projeto
