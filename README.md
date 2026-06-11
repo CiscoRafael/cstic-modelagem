@@ -61,7 +61,7 @@
 ---
 
 ## 🔗 Links Úteis
-* 🌐 📄 Documentação Completa (PDF): [Acessar Documentação do Projeto](<link-da-demo-web>)
+* 🌐 📄 Documentação Completa (PDF): [Acessar Documentação do Projeto](<docs/Documentação de Projeto - CSTIC.pdf>)
 * 
 --
 
