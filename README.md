@@ -217,6 +217,11 @@ Apesar dos benefícios relacionados à escalabilidade e modularidade, a arquitet
 ### 5. Diagrama de Implantação (AWS)
 <img src="images/implementacao.png" width="600px" />
 
+### 6. Diagrama de Sequencia
+
+![Diagrama de Sequência Geral](docs/Diagrama%20de%20Sequência%20Geral.png)
+> **Nota:** Diagramas de sequência detalhados para cada User Story (US001 a US014), bem como fluxos de empresas parceiras e vantagens para o aluno, estão organizados no documento de [Diagramas de Sequência](docs/USER_STORIES.md).
+
 ---
 
 ## 🔗 Documentações utilizadas
