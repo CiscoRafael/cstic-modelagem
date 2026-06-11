@@ -51,29 +51,7 @@
 - [Funcionalidades Principais](#-funcionalidades-principais)
 - [Tecnologias Utilizadas](#-tecnologias-utilizadas)
 - [Arquitetura](#-arquitetura)
-  - [Exemplos de diagramas](#exemplos-de-diagramas)
-- [Instalação e Execução](#-instalação-e-execução)
-  - [Pré-requisitos](#pré-requisitos)
-  - [Variáveis de Ambiente](#-variáveis-de-ambiente)
-     - [1 Back-end (Spring Boot)](#1-back-end-spring-boot)
-     - [2 Front-end (React, Vite)](#2-front-end-react-vite)
-     - [3 Exemplos de Variáveis de Ambiente na Vercel](#3-exemplos-de-variáveis-de-ambiente-na-vercel)
-  - [Instalação de Dependências](#-instalação-de-dependências)
-    - [Front-end (React)](#front-end-react)
-    - [Back-end (Spring Boot)](#back-end-spring-boot)
-  - [Inicialização do Banco de Dados (PostgreSQL)](#-inicialização-do-banco-de-dados-postgresql)
-  - [Como Executar a Aplicação](#-como-executar-a-aplicação)
-    - [Terminal 1: Back-end (Spring Boot)](#terminal-1-back-end-spring-boot)
-    - [Terminal 2: Front-end (React, Vite)](#terminal-2-front-end-react-vite)
-    - [Execução Local Completa com Docker Compose (Incluindo Banco de Dados)](#-execução-local-completa-com-docker-compose-incluindo-banco-de-dados)
-    - [Passos para build, inicialização e execução](#-passos-para-build-inicialização-e-execução)
-- [Deploy](#-deploy)
-- [Estrutura de Pastas](#-estrutura-de-pastas)
-- [Demonstração](#-demonstração)
-  - [Aplicativo Mobile](#-aplicativo-mobile)
-  - [Aplicação Web](#-aplicação-web)
-  - [Exemplo de saída no Terminal (para Back-end, API, CLI)](#-exemplo-de-saída-no-terminal-para-back-end-api-cli)
-- [Testes](#-testes)
+- [Exemplos de diagramas](#exemplos-de-diagramas)
 - [Documentações utilizadas](#-documentações-utilizadas)
 - [Autores](#-autores)
 - [Contribuição](#-contribuição)
@@ -178,7 +156,7 @@ A solução é composta por uma aplicação web responsável pela interação co
 
 ### Fluxo de Dados
 
-<img src="images/fluxo_dados.png" width="600px" />
+<img src="docs/diagramas/fluxo_dados.png" width="600px" />
 
 ## Padrões de Projetos utilizados
 
@@ -202,83 +180,81 @@ Apesar dos benefícios relacionados à escalabilidade e modularidade, a arquitet
 
 ## 📊 Diagramas e Modelagem
 
-### 1. Diagrama de Caso de Uso
-<img src="images/casos_de_uso.png" width="600px" />
+### 1. Diagrama de Arquitetura
+<img src="docs/diagramas/arquitetura.png" width="600px" />
 
-### 2. Diagrama de Classes
-<img src="images/classes.png" width="600px" />
+### 2. Diagrama de Casos de Uso
+<img src="docs/diagramas/casos_de_uso.png" width="600px" />
 
-### 3. Diagrama de Pacotes
-<img src="images/pacotes.png" width="1200px" />
+### 3. Diagrama de Classes
+<img src="docs/diagramas/classes.png" width="600px" />
 
-### 4. Diagrama de Componentes
-<img src="images/componentes.png" width="800px" />
+### 4. Diagrama de Pacotes
+<img src="docs/diagramas/pacotes.png" width="1200px" />
 
-### 5. Diagrama de Implantação (AWS)
-<img src="images/implementacao.png" width="600px" />
+### 5. Diagrama de Componentes
+<img src="docs/diagramas/componentes.png" width="800px" />
 
-### 6. Diagrama de Sequencia
+### 6. Diagrama de Implantação
+<img src="docs/diagramas/implementacao.png" width="600px" />
 
-![Diagrama de Sequência Geral](docs/Diagrama%20de%20Sequência%20Geral.png)
-> **Nota:** Diagramas de sequência detalhados para cada User Story (US001 a US014), bem como fluxos de empresas parceiras e vantagens para o aluno, estão organizados no documento de [Diagramas de Sequência](docs/USER_STORIES.md).
+### 7. Diagrama de Comunicação
+<img src="docs/diagramas/comunicacao.png" width="600px" />
 
----
+### 8. Diagrama de Entidade e Relacionamento
+<img src="docs/diagramas/der.png" width="600px" />
 
-## 🔗 Documentações utilizadas
+### 9. Diagrama de Estados
+<img src="docs/diagramas/estados.png" width="600px" />
 
-Liste aqui links para documentação técnica, referências de bibliotecas complexas ou guias de estilo que foram cruciais para o projeto.
+### 10. Diagrama de Sequência Geral
 
-* 📖 **Framework/Biblioteca (Front-end):** [Documentação Oficial do **React**](https://react.dev/reference/react)
-* 📖 **Build Tool (Front-end):** [Guia de Configuração do **Vite**](https://vitejs.dev/config/)
-* 📖 **Framework (Back-end):** [Documentação Oficial do **Spring Boot**](https://docs.spring.io/spring-boot/docs/current/reference/html/)
-* 📖 **Containerização:** [Documentação de Referência do **Docker**](https://docs.docker.com/)
-* 📖 **Guia de Estilo:** [**Conventional Commits** (Padrão de Mensagens)](https://www.conventionalcommits.org/en/v1.0.0/)
-* 📖 **Documentação Interna:** [Design System do Projeto](./docs/design-system.md)
+<img src="docs/diagramas/sequencia_geral.png" width="600px" />
+
+### 11. Diagrama de Sequência Abertura de Chamados
+
+<img src="docs/diagramas/sequencai_abertura_chamados.png" width="600px" />
+
+### 12. Diagrama de Sequência Validação de Usuário
+
+<img src="docs/diagramas/sequencia_validacao_usuario.png" width="600px" />
+
+### 13.  Diagrama de Sequência Encerramento Automático
+
+<img src="docs/diagramas/sequencia_encerramento_automatico.png" width="600px" />
+
+### 14.  Diagrama de Sequência Chat em Tempo Real
+
+<img src="docs/diagramas/sequencia_chat.png" width="600px" />
 
 ---
 
 ## 👥 Autores
-Liste os principais contribuidores. Você pode usar links para seus perfis.
 
-| 👤 Nome | 🖼️ Foto | :octocat: GitHub | 💼 LinkedIn | 📤 Gmail |
-|---------|----------|-----------------|-------------|-----------|
-| Nome 1  | <div align="center"><img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" width="70px" height="70px"></div> | <div align="center"><a href="https://github.com/user1"><img src="https://joaopauloaramuni.github.io/image/github6.png" width="50px" height="50px"></a></div> | <div align="center"><a href="https://www.linkedin.com/in/user1"><img src="https://joaopauloaramuni.github.io/image/linkedin2.png" width="50px" height="50px"></a></div> | <div align="center"><a href="mailto:user1@gmail.com"><img src="https://joaopauloaramuni.github.io/image/gmail3.png" width="50px" height="50px"></a></div> |
-| Nome 2  | <div align="center"><img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" width="70px" height="70px"></div> | <div align="center"><a href="https://github.com/user2"><img src="https://joaopauloaramuni.github.io/image/github6.png" width="50px" height="50px"></a></div> | <div align="center"><a href="https://www.linkedin.com/in/user2"><img src="https://joaopauloaramuni.github.io/image/linkedin2.png" width="50px" height="50px"></a></div> | <div align="center"><a href="mailto:user2@gmail.com"><img src="https://joaopauloaramuni.github.io/image/gmail3.png" width="50px" height="50px"></a></div> |
-
-> [!TIP]
-> 💡 **Dica:** Escolha uma foto profissional, preferencialmente de rosto, evitando imagens com baixa qualidade, filtros excessivos ou elementos distrativos.
+| 👤 Nome | :octocat: GitHub |
+|---------|----------|
+| Francisco Rodrigues | [@CiscoRafael](https://github.com/CiscoRafael) |
 
 ---
 
 ## 🤝 Contribuição
-Guia para contribuições ao projeto.
-
-1.  Faça um `fork` do projeto.
-2.  Crie uma branch para sua feature (`git checkout -b feature/minha-feature`).
-3. Commit suas mudanças (`git commit -m 'feat: Adiciona nova funcionalidade X'`). **(Utilize [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/))**
-4.  Faça o `push` para a branch (`git push origin feature/minha-feature`).
-5.  Abra um **Pull Request (PR)**.
-
-> [!IMPORTANT]
-> 📝 **Regras:** Por favor, verifique o arquivo [`CONTRIBUTING.md`](./CONTRIBUTING.md) para detalhes sobre nosso guia de estilo de código e o processo de submissão de PRs.
+1. Faça um `fork` do projeto.
+2. Crie uma branch para sua feature (`git checkout -b feature/minha-feature`).
+3. Commit suas mudanças (`git commit -m 'feat: Adiciona nova funcionalidade X'`). Utilize o padrão **Conventional Commits**.
+4. Faça o `push` para a branch (`git push origin feature/minha-feature`).
+5. Abra um **Pull Request (PR)**.
 
 ---
 
 ## 🙏 Agradecimentos
-Em ambiente acadêmico, citar fontes e inspirações é crucial (integridade acadêmica). Em ambiente profissional, mostra humildade e conexão com a comunidade.
-
 Gostaria de agradecer aos seguintes canais e pessoas que foram fundamentais para o desenvolvimento deste projeto:
 
 * [**Engenharia de Software PUC Minas**](https://www.instagram.com/engsoftwarepucminas/) - Pelo apoio institucional, estrutura acadêmica e fomento à inovação e boas práticas de engenharia.
 * [**Prof. Dr. João Paulo Aramuni**](https://github.com/joaopauloaramuni) - Pelos valiosos ensinamentos sobre **Arquitetura de Software** e **Padrões de Projeto**.
-* [**Fernanda Kipper**](https://www.instagram.com/kipper.dev/) - Pelos valiosos ensinamentos em **Desenvolvimento Web**, **DevOps** e melhores práticas em **Front-end**.
-* [**Rodrigo Branas**](https://branas.io/) - Pela didática excepcional em **Clean Architecture** e **Clean Code**.
-* [**Código Fonte TV**](https://codigofonte.tv/) - Pelo vasto conteúdo e cobertura de notícias, tutoriais e apoio à comunidade de **Desenvolvimento Web**.
 
 ---
 
 ## 📄 Licença
-
-Este projeto é distribuído sob a **[Licença MIT](https://github.com/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software/blob/main/LICENSE)**.
+Este projeto é distribuído sob a **[Licença MIT](./LICENSE)**.
 
 ---
