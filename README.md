@@ -62,12 +62,7 @@
 
 ## 🔗 Links Úteis
 * 🌐 📄 Documentação Completa (PDF): [Acessar Documentação do Projeto](<link-da-demo-web>)
-  > 💻 **Descrição:** Link para a aplicação em ambiente de produção (Ex: hospedado na Vercel, Netlify ou AWS S3).
-* 📱 **Download Mobile:** [App Store](<link-app-store>) | [Google Play](<link-google-play>) | [APK Direto](<link-para-apk-direto>)
-  > 📱 **Descrição:** Links diretos para download nas lojas de aplicativos (se aplicável) e para o arquivo de instalação direta no Android (APK).
-* 📖 **Documentação:** [Leia a Wiki/Docs](<link-para-docs>)
-  > 📚 **Descrição:** Acesso à documentação técnica completa do projeto (Ex: Swagger/OpenAPI para API, ou Wiki interna).
-
+* 
 --
 
 ## 📝 Sobre o Projeto
